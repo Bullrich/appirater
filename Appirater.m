@@ -459,10 +459,16 @@ static BOOL _modalOpen = false;
 	[userDefaults synchronize];
 
 	BOOL isIOS7 = [[UIDevice currentDevice].systemVersion floatValue] >= 7.0;
+    BOOL isIO10_3 = [[UIDevice currentDevice].systemVersion floatValue] >= 10.3;
 
 	//Use the in-app StoreKit view if available (iOS 6) and imported. This works in the simulator.
 	if (!isIOS7 && !_useURLMethod && !_openInAppStore && NSStringFromClass([SKStoreProductViewController class]) != nil) {
 		
+        if(isIO10_3){
+            [SKStoreReviewController requestReview];
+            return;
+        }
+        
 		SKStoreProductViewController *storeViewController = [[SKStoreProductViewController alloc] init];
 		NSNumber *appId = [NSNumber numberWithInteger:_appId.integerValue];
 		[storeViewController loadProductWithParameters:@{SKStoreProductParameterITunesItemIdentifier:appId} completionBlock:nil];
